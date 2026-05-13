@@ -33,6 +33,7 @@ import { VideoSourceModel } from '@server/models/video/video-source.js'
 import { LocalVideoViewerWatchSectionModel } from '@server/models/stat/local-video-viewer-watch-section.js'
 import { LocalVideoViewerModel } from '@server/models/stat/local-video-viewer.js'
 import { WatchedWordsListModel } from '@server/models/watched-words/watched-words-list.js'
+import { WatchedWordsSubscriptionModel } from '@server/models/watched-words/watched-words-subscription.js'
 import { readFileSync } from 'fs'
 import pg from 'pg'
 import { QueryTypes, Transaction } from 'sequelize'
@@ -211,6 +212,7 @@ export async function initDatabaseModels (silent: boolean) {
     CommentAutomaticTagModel,
     AutomaticTagModel,
     WatchedWordsListModel,
+    WatchedWordsSubscriptionModel,
     AccountAutomaticTagPolicyModel,
     UploadImageModel,
     VideoLiveScheduleModel,

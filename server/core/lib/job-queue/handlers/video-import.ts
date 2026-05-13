@@ -27,6 +27,8 @@ import { addLocalOrRemoteStoryboardJobIfNeeded, buildMoveVideoJob } from '@serve
 import { VideoPathManager } from '@server/lib/video-path-manager.js'
 import { buildNextVideoState } from '@server/lib/video-state.js'
 import { createTorrentAndSetInfoHash, downloadWebTorrentVideo } from '@server/lib/webtorrent.js'
+import { getServerAccount } from '@server/models/application/application.js'
+import { UserModel } from '@server/models/user/user.js'
 import { VideoCaptionModel } from '@server/models/video/video-caption.js'
 import { MUserId, MVideoFile, MVideoFull } from '@server/types/models/index.js'
 import { MVideoImport, MVideoImportDefault, MVideoImportDefaultFiles, MVideoImportVideo } from '@server/types/models/video/video-import.js'
@@ -45,7 +47,6 @@ import { federateVideoIfNeeded } from '../../activitypub/videos/index.js'
 import { Notifier } from '../../notifier/index.js'
 import { createLocalVideoThumbnailsFromVideo } from '../../thumbnail.js'
 import { JobQueue } from '../job-queue.js'
-import { UserModel } from '@server/models/user/user.js'
 
 async function processVideoImport (job: Job): Promise<VideoImportPreventExceptionResult> {
   const payload = job.data as VideoImportPayload
@@ -233,8 +234,12 @@ async function processFile (downloader: () => Promise<string>, videoImport: MVid
 
           await replaceChaptersIfNotExist({ video, chapters: containerChapters, transaction: t })
 
-          const automaticTags = await new AutomaticTagger().buildVideoAutomaticTags({ video, transaction: t })
-          await setAndSaveVideoAutomaticTags({ video, automaticTags, transaction: t })
+          const automaticTagsByAccount = await new AutomaticTagger().buildVideoAutomaticTags({
+            serverAccount: await getServerAccount(),
+            video,
+            transaction: t
+          })
+          await setAndSaveVideoAutomaticTags({ video, automaticTagsByAccount, transaction: t })
 
           // Now we can federate the video (reload from database, we need more attributes)
           const videoForFederation = await VideoModel.loadFull(video.uuid, t)
