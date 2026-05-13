@@ -1,7 +1,6 @@
 import { AutomaticTagAvailable, AutomaticTagPolicy, CommentAutomaticTagPolicies } from '@peertube/peertube-models'
 import { logger, loggerTagsFactory } from '@server/helpers/logger.js'
 import { WEBSERVER } from '@server/initializers/constants.js'
-import { getServerAccount } from '@server/models/application/application.js'
 import { AccountAutomaticTagPolicyModel } from '@server/models/automatic-tag/account-automatic-tag-policy.js'
 import { WatchedWordsListModel } from '@server/models/watched-words/watched-words-list.js'
 import { MAccount, MAccountId, MVideo } from '@server/types/models/index.js'
